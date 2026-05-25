@@ -1,0 +1,40 @@
+{
+  "realm": "Invoice-system",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "invoice-client",
+      "name": "Invoice System Client",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "implicitFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": ["http://localhost:5173/*"],
+      "webOrigins": ["*"],
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      }
+    }
+  ],
+  "users": [
+    {
+      "username": "anu123",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Anu",
+      "lastName": "User",
+      "email": "anu123@example.com",
+      "requiredActions": [],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "invoiceanu123",
+          "temporary": false
+        }
+      ]
+    }
+  ]
+}

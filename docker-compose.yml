@@ -1,0 +1,67 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    env_file:
+      - ./backend/.env
+    environment:
+      APP_NAME: Invoice Recognition API
+      ENVIRONMENT: development
+      LOG_LEVEL: INFO
+      DATABASE_URL: postgresql+psycopg://invoice_user:invoice_password@postgres:5432/invoice_recognition
+      UPLOAD_DIR: uploads
+      MAX_UPLOAD_BYTES: 10485760
+      AUTH_DISABLED: "false"
+      KEYCLOAK_ISSUER: http://localhost:8080/realms/Invoice-system
+      KEYCLOAK_JWKS_URL: http://keycloak:8080/realms/Invoice-system/protocol/openid-connect/certs
+      KEYCLOAK_AUDIENCE: invoice-client
+      FRONTEND_ORIGIN: http://localhost:5173
+      LLM_PROVIDER: gemini
+    ports:
+      - "8000:8000"
+    volumes:
+      - backend_uploads:/app/uploads
+    depends_on:
+      - postgres
+      - keycloak
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: http://localhost:8000
+        VITE_KEYCLOAK_URL: http://localhost:8080
+        VITE_KEYCLOAK_REALM: Invoice-system
+        VITE_KEYCLOAK_CLIENT_ID: invoice-client
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: invoice_recognition
+      POSTGRES_USER: invoice_user
+      POSTGRES_PASSWORD: invoice_password
+    ports:
+      - "55432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:25.0
+    command: start-dev --import-realm
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+      - ./keycloak:/opt/keycloak/data/import
+
+volumes:
+  backend_uploads:
+  postgres_data:
+  keycloak_data:
