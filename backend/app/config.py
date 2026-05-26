@@ -23,6 +23,8 @@ class Settings(BaseSettings):
     llm_provider: str = "mock"
     gemini_api_key: str | None = None
     gemini_model: str = "gemini-2.5-flash"
+    discord_bot_token: str | None = None
+    discord_max_reply_chars: int = 1900
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
