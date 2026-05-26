@@ -124,12 +124,5 @@ Run the whole local stack:
 docker compose up --build
 ```
 
-Deployment notes:
 
-```text
-- Deploy the API, frontend, and Discord bot as separate services.
-- The Discord bot should run exactly one long-running worker process.
-- Keep DISCORD_BOT_TOKEN and GEMINI_API_KEY as private environment variables.
-- Do not commit backend/.env.
-- For production, update FRONTEND_ORIGIN, KEYCLOAK_ISSUER, and frontend build args to your deployed URLs.
-```
+
